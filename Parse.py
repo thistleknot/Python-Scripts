@@ -13,7 +13,7 @@ df
 
 # # of rows
     #https://stackoverflow.com/questions/15943769/how-do-i-get-the-row-count-of-a-pandas-dataframe
-len(df.index)-1
+split=int((len(df.index)-1)/2)
 
 X, y = df.iloc[:, 1:52], df.iloc[:, -1]
 
@@ -24,6 +24,6 @@ y
 model = sm.OLS(y, X).fit()
 
 model.summary()
-
+split
 #df.iloc[:, 0:52]
 #df.loc[0:100,'date']
