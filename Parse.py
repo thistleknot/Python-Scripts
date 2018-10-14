@@ -23,6 +23,10 @@ y = df.iloc[108:, -1]
 
 #training
 tx = X.iloc[0:int(split), 1:48]
+
+df1 = df.loc[:, ['date', 'CPIAUCSL']]
+
+
 ty = y.iloc[0:int(split), ]
 
 #validation
@@ -45,8 +49,10 @@ tx
 model = sm.OLS(ty, tx).fit()
 
 model.summary()
+#df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[:, ['date', 'CPIAUCSL']]
+df1
 #split
-
+#y
 #tX
 #df.iloc[:, 0:52]
 #df.loc[0:100,'date']
