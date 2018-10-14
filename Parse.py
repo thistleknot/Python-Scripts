@@ -9,21 +9,25 @@ input_file = "C:/Users/user/Documents/Python Scripts/parsed.csv"
 
 
 df = pd.read_csv(input_file, header = 0)
-df
+
 
 # # of rows
     #https://stackoverflow.com/questions/15943769/how-do-i-get-the-row-count-of-a-pandas-dataframe
-split=int((len(df.index)-1)/2)
+split=int(len(df.index)-1)
 
-X, y = df.iloc[:, 1:52], df.iloc[:, -1]
+tX = df.iloc[1:split+1:, 1:52]
 
-X
+ty = df.iloc[1:split+1:, -1]
 
-y
+#tX = X.iloc[0:(split+1):, 0:52]
 
-model = sm.OLS(y, X).fit()
+#ty
+
+model = sm.OLS(ty, tX).fit()
 
 model.summary()
-split
+#split
+
+#tX
 #df.iloc[:, 0:52]
 #df.loc[0:100,'date']
