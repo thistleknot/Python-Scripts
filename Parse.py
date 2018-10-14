@@ -6,8 +6,14 @@ import statsmodels.api as sm
 
 input_file = "C:/Users/user/Documents/Python Scripts/parsed.csv"
 
+
+
 df = pd.read_csv(input_file, header = 0)
 df
+
+# # of rows
+    #https://stackoverflow.com/questions/15943769/how-do-i-get-the-row-count-of-a-pandas-dataframe
+len(df.index)-1
 
 X, y = df.iloc[:, 1:52], df.iloc[:, -1]
 
