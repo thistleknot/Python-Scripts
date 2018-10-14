@@ -9,16 +9,15 @@ input_file = "C:/Users/user/Documents/Python Scripts/parsed.csv"
 df = pd.read_csv(input_file, header = 0)
 df
 
-X, y = df.iloc[:, :-2], df.iloc[:, -1]
-
-x = df.iloc[:, 1:51]
-
-x
+X, y = df.iloc[:, 1:52], df.iloc[:, -1]
 
 X
 
 y
 
-model = sm.OLS(y, x).fit()
+model = sm.OLS(y, X).fit()
 
 model.summary()
+
+#df.iloc[:, 0:52]
+#df.loc[0:100,'date']
