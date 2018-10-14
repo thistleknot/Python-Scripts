@@ -13,17 +13,36 @@ df = pd.read_csv(input_file, header = 0)
 
 # # of rows
     #https://stackoverflow.com/questions/15943769/how-do-i-get-the-row-count-of-a-pandas-dataframe
-split=int(len(df.index)-1)
+split=int(len(df.index))/2
+df
+X = df.iloc[108:, 1:48]
 
-tX = df.iloc[1:split+1:, 1:52]
+y = df.iloc[108:, -1]
 
-ty = df.iloc[1:split+1:, -1]
+#108 to just shy of last
+
+#training
+tx = X.iloc[0:int(split), 1:48]
+ty = y.iloc[0:int(split), ]
+
+#validation
+vx = X.iloc[int(split+1):,1:48]
+
+#print
+tx
+
+#print
+vx
+ty
+tx
+#split
+#ty = df.iloc[0:int(split), -1]
 
 #tX = X.iloc[0:(split+1):, 0:52]
 
-#ty
+#y
 
-model = sm.OLS(ty, tX).fit()
+model = sm.OLS(ty, tx).fit()
 
 model.summary()
 #split
