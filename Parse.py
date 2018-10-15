@@ -6,31 +6,28 @@ import statsmodels.api as sm
 
 input_file = "C:/Users/user/Documents/Python Scripts/parsed.csv"
 
-
-
 df = pd.read_csv(input_file, header = 0)
-
 
 # # of rows
     #https://stackoverflow.com/questions/15943769/how-do-i-get-the-row-count-of-a-pandas-dataframe
 split=int(len(df.index))/2
 df
-X = df.iloc[108:, 1:48]
+X = df.loc[108:, ['date','PSAVERT','GDPC1','DGS10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N']]
 
-y = df.iloc[108:, -1]
+y = df.loc[108:, ['SPCS20RSA']]
 
 #108 to just shy of last
 
 #training
-tx = X.iloc[0:int(split), 1:48]
+tx = X.iloc[0:int(split), 1:9]
 
-df1 = df.loc[:, ['date', 'CPIAUCSL']]
+#df1 = df.loc[:, ['date','PSAVERT','GDPC1','DGS10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N']]
 
 
 ty = y.iloc[0:int(split), ]
 
 #validation
-vx = X.iloc[int(split+1):,1:48]
+vx = X.iloc[int(split+1):,1:9]
 
 #print
 tx
@@ -50,7 +47,7 @@ model = sm.OLS(ty, tx).fit()
 
 model.summary()
 #df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[:, ['date', 'CPIAUCSL']]
-df1
+#X
 #split
 #y
 #tX
