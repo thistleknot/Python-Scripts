@@ -12,14 +12,15 @@ df = pd.read_csv(input_file, header = 0)
     #https://stackoverflow.com/questions/15943769/how-do-i-get-the-row-count-of-a-pandas-dataframe
 split=int(len(df.index))/2
 df
-X = df.loc[108:, ['date','PSAVERT','GDPC1','DGS10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N']]
+#DCOILWTICO was not significant, most likely due to present of cpiaucsl
+X = df.loc[108:, ['date','CPIAUCSL','PSAVERT','GDPC1','DGS10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N']]
 
 y = df.loc[108:, ['SPCS20RSA']]
 
 #108 to just shy of last
 
 #training
-tx = X.iloc[0:int(split), 1:9]
+tx = X.iloc[0:int(split), 1:10]
 
 #df1 = df.loc[:, ['date','PSAVERT','GDPC1','DGS10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N']]
 
@@ -27,10 +28,10 @@ tx = X.iloc[0:int(split), 1:9]
 ty = y.iloc[0:int(split), ]
 
 #validation
-vx = X.iloc[int(split+1):,1:9]
+vx = X.iloc[int(split+1):,1:10]
 
 #print
-vy = y.iloc[int(split+1):,1:9]
+vy = y.iloc[int(split+1):,1:10]
 
 #print
 vx
