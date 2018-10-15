@@ -44,12 +44,6 @@ tx
 
 #y
 
-
-
-model = sm.OLS(ty, tx).fit()
-
-model.summary()
-
 #offset
 tx_lagged = tx.shift(+1)
 ty_lagged = ty.shift(+1)
@@ -65,7 +59,16 @@ ty_future_yield = (ty_future-ty)/ty
 #validate
 #ty_yield
 
-pd.concat([tx, tx_yield, ty, ty_yield, ty_future_yield], axis=1)
+
 #tx_lagged
 
 #df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[
+
+XNew = pd.concat([tx, tx_yield, ty, ty_yield], axis=1)
+YNew = y_yield
+
+model = sm.OLS(ty, tx).fit()
+#modelWLag = sm.OLS(YNew, XNew).fit()
+
+model.summary()
+
