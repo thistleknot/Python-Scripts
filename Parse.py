@@ -65,10 +65,14 @@ ty_future_yield = (ty_future-ty)/ty
 #df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[
 
 XNew = pd.concat([tx, tx_yield, ty, ty_yield], axis=1)
-YNew = y_yield
+YNew = ty_future_yield
 
 model = sm.OLS(ty, tx).fit()
-#modelWLag = sm.OLS(YNew, XNew).fit()
+modelWLag = sm.OLS(YNew.loc[109:270], XNew.loc[109:270,]).fit()
 
 model.summary()
+#ty_future_yield
 
+modelWLag.summary()
+#YNew.loc[109:,]
+#XNew.loc[109:,]
