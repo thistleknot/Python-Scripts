@@ -51,7 +51,10 @@ model = sm.OLS(ty, tx).fit()
 model.summary()
 
 #offset
-df_lagged = df.shift(-1)
-df_lagged
+tx_lagged = tx.shift(-1)
+#df_lagged
+tx_lagged
+tx_yield = (tx-tx_lagged)/tx_lagged
+tx_yield
 
 #df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[
