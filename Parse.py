@@ -11,7 +11,7 @@ df = pd.read_csv(input_file, header = 0)
 # # of rows
     #https://stackoverflow.com/questions/15943769/how-do-i-get-the-row-count-of-a-pandas-dataframe
 split=int(len(df.index))/2
-df
+
 #DCOILWTICO was not significant, most likely due to present of cpiaucsl
 X = df.loc[108:, ['date','CPIAUCSL','PSAVERT','GDPC1','DGS10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N']]
 
@@ -44,13 +44,14 @@ tx
 
 #y
 
+
+
 model = sm.OLS(ty, tx).fit()
 
 model.summary()
-#df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[:, ['date', 'CPIAUCSL']]
-#X
-#split
-#y
-#tX
-#df.iloc[:, 0:52]
-#df.loc[0:100,'date']
+
+#offset
+df_lagged = df.shift(-1)
+df_lagged
+
+#df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[
