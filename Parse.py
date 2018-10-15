@@ -52,9 +52,16 @@ model.summary()
 
 #offset
 tx_lagged = tx.shift(-1)
-#df_lagged
-tx_lagged
+ty_lagged = ty.shift(-1)
+
+
+
+#yields
+
 tx_yield = (tx-tx_lagged)/tx_lagged
-tx_yield
+ty_yield = (ty-ty_lagged)/ty_lagged
+
+#validate
+ty_yield
 
 #df1 = df.loc[:, ['date', 'CPIAUCSL']]df1 = df.loc[
