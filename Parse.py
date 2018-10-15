@@ -30,7 +30,7 @@ ty = y.iloc[0:int(split), ]
 vx = X.iloc[int(split+1):,1:9]
 
 #print
-tx
+vy = y.iloc[int(split+1):,1:9]
 
 #print
 vx
