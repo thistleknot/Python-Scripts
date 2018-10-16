@@ -47,7 +47,11 @@ x_and_y_with_yields
 # .938 Adj R^2
 model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
 
-model.predict(x_and_y_with_yields.loc[int(split+2):])
+#note: has to be +2
+    #x_and_y_with_yields.loc
+results = pd.concat([model.predict(x_and_y_with_yields.loc[int(split+2):]), y_future_yield[int(split+1):]], axis=1)
+results
+
 #model.params
-model.summary()
+#model.summary()
 
