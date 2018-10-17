@@ -40,7 +40,7 @@ x_yield = (x.iloc[1:-1,1:]-x_lagged.iloc[1:-1,1:])/x_lagged.iloc[1:-1,1:]
 y_yield = (y.iloc[1:-1,]-y_lagged.iloc[1:-1,])/y_lagged.iloc[1:-1,]
 #y_future_yield = ()
 
-y_future_yield = (y_future.iloc[1:-1,]-y.iloc[1:-1,])/y_future.iloc[1:-1,]
+y_future_yield = (y_future.iloc[1:-1,]-y.iloc[1:-1,])/y.iloc[1:-1,]
 y_future_yield
 
 x_and_y_with_yields = pd.concat([x.iloc[1:-1,1:], x_yield, y.iloc[1:-1,], y_yield], axis=1)
@@ -55,7 +55,7 @@ results = pd.concat([model.predict(x_and_y_with_yields.loc[int(split+2):]), y_fu
 results
 
 model.params
-model.summary()
+
 
 #scikit
 #https://towardsdatascience.com/train-test-split-and-cross-validation-in-python-80b61beca4b6
@@ -63,7 +63,7 @@ X_train, X_test, y_train, y_test = train_test_split(x_and_y_with_yields.loc[1:in
 
 lm = linear_model.LinearRegression()
 
-model = lm.fit(X_train, y_train)
+model_scikit = lm.fit(X_train, y_train)
 predictions = lm.predict(X_test)
 
 predictions.shape[0]
@@ -73,10 +73,11 @@ plt.scatter(y_test, predictions)
 plt.xlabel("True Values")
 plt.ylabel("Predictions")
 
-print ("Score:", model.score(X_test, y_test))
-
+print ("Score:", model_scikit.score(X_test, y_test))
+results
 #type(y_test)
 #type(predictions)
 #predictions[0:,0:].tolist()
 #model.params
 #model.summary()
+model.summary()
