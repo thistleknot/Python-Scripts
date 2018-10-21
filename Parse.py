@@ -160,10 +160,18 @@ results.to_csv("results_1stHalf.csv")
 x_and_y_with_interactions
 
 #stepwise regression
-xsw = x.iloc[0:int(split+1),1:]
-ysw = y.iloc[0:int(split+1),0:]
-result = stepwise_selection(x.iloc[0:int(split+1),1:],y.iloc[0:int(split+1),0:])
+xsw = df.drop(columns=['date', 'CSUSHPINSA','future'])[0:int(split+1)]
+ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
+
+#wout date
+#result = stepwise_selection(xsw.iloc[0:,1:],ysw)
+xsw.iloc[0:,1:]
 #result
+#[1:-1,1:]
+
+
+
+#df.loc[:, df.columns != 'date', 'CSUSHPINSA']
 
 
 #[1:int(split+1)]
