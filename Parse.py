@@ -162,4 +162,7 @@ x_and_y_with_interactions
 #stepwise regression
 #result = stepwise_selection(x.loc[0:,1:],y)
 #result
-x.loc[0:int(split+1)]
+x.iloc[1:int(split+1),1:]
+
+#[1:int(split+1)]
+#X_train.iloc[1:-1,1:]
