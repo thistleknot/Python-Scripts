@@ -163,10 +163,12 @@ x_and_y_with_interactions
 xsw = df.drop(columns=['date', 'CSUSHPINSA','future'])[0:int(split+1)]
 ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 
+xsw.iloc[0:,0:]
+
 #wout date
-#result = stepwise_selection(xsw.iloc[0:,1:],ysw)
-xsw.iloc[0:,1:]
-#result
+result = stepwise_selection(xsw.iloc[0:,1:46],ysw)
+
+result
 #[1:-1,1:]
 
 
