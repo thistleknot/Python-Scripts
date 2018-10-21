@@ -39,7 +39,7 @@ def stepwise_selection(X, y,
             new_pval[new_column] = model.pvalues[new_column]
         best_pval = new_pval.min()
         if best_pval < threshold_in:
-            best_feature = new_pval.argmin()
+            best_feature = new_pval.idxmin()
             included.append(best_feature)
             changed=True
             if verbose:
@@ -52,7 +52,7 @@ def stepwise_selection(X, y,
         worst_pval = pvalues.max() # null if pvalues is empty
         if worst_pval > threshold_out:
             changed=True
-            worst_feature = pvalues.argmax()
+            worst_feature = pvalues.idxmax()
             included.remove(worst_feature)
             if verbose:
                 print('Drop {:30} with p-value {:.6}'.format(worst_feature, worst_pval))
@@ -160,9 +160,11 @@ results.to_csv("results_1stHalf.csv")
 x_and_y_with_interactions
 
 #stepwise regression
-#result = stepwise_selection(x.loc[0:,1:],y)
+xsw = x.iloc[0:int(split+1),1:]
+ysw = y.iloc[0:int(split+1),0:]
+result = stepwise_selection(x.iloc[0:int(split+1),1:],y.iloc[0:int(split+1),0:])
 #result
-x.iloc[1:int(split+1),1:]
+
 
 #[1:int(split+1)]
 #X_train.iloc[1:-1,1:]
