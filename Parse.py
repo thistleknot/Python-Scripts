@@ -61,17 +61,6 @@ def stepwise_selection(X, y,
     return included
 
 
-#model_with_interactions.summary()
-import matplotlib.pyplot as plt 
-import numpy as np 
-from sklearn import datasets, linear_model, metrics 
-from sklearn.model_selection import train_test_split
-
-import numpy as np
-import pandas as pd
-import sklearn.model_selection as ms
-import statsmodels.api as sm
-
 #from numpy import percentile
 
 input_file = "parsed.csv"
@@ -114,8 +103,8 @@ x_and_y_with_yields = pd.concat([x.iloc[1:-1,1:], x_yield, y.iloc[1:-1,], y_yiel
 x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], x_interaction, y.iloc[1:-1,], y_lagged.iloc[1:-1,], y_interaction], axis=1)
 
 # .938 Adj R^2
-model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
-model_with_interactions = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_interactions.loc[1:int(split+1)]).fit()
+#model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
+#model_with_interactions = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_interactions.loc[1:int(split+1)]).fit()
 
 #note: has to be +2
     #x_and_y_with_yields.loc
@@ -123,7 +112,7 @@ model_with_interactions = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_wit
 results = pd.concat([model.predict(x_and_y_with_yields.loc[int(split+1):]), y_future_yield[int(split+1):]], axis=1)
 
 
-model.params
+#model.params
 
 
 #scikit
@@ -132,8 +121,12 @@ X_train, X_test, y_train, y_test = train_test_split(x_and_y_with_yields.loc[1:in
 
 lm = linear_model.LinearRegression()
 
-model_scikit = lm.fit(X_train, y_train)
-predictions = lm.predict(X_test)
+x_and_y_with_interactions
+
+
+
+model_scikit = lm.fit(X_train.dropna(axis=1, how='all'), y_train)
+predictions = lm.predict(X_test.dropna(axis=1, how='all'))
 
 predictions.shape[0]
 y_test.shape[0]
@@ -142,7 +135,7 @@ plt.scatter(y_test, predictions)
 plt.xlabel("True Values")
 plt.ylabel("Predictions")
 
-print ("Score:", model_scikit.score(X_test, y_test))
+print ("Score:", model_scikit.score(X_test.dropna(axis=1, how='all'), y_test))
 results
 
 
@@ -166,9 +159,9 @@ ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 xsw.iloc[0:,0:]
 
 #wout date
-result = stepwise_selection(xsw.iloc[0:,1:46],ysw)
-
-result
+#result = stepwise_selection(xsw.dropna(axis=1, how='all').iloc[0:,1:220],ysw)
+#'CSUSHPISA', 'DEXBZUS', 'UNRATENSA', 'UNRATE'
+#result
 #[1:-1,1:]
 
 
