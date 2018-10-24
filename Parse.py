@@ -125,9 +125,12 @@ lm = linear_model.LinearRegression()
 
 x_and_y_with_interactions
 
+
+
 #should be checking and flagging both columns if na is found in any
 model_scikit = lm.fit(X_train.dropna(axis=1, how='all'), y_train)
 predictions = lm.predict(X_test.dropna(axis=1, how='all'))
+
 
 predictions.shape[0]
 y_test.shape[0]
@@ -151,7 +154,6 @@ print(model.summary())
 #print(results)
 #results.to_csv("results_1stHalf.csv")
 
-
 #model_with_interactions.summary()
 x_and_y_with_interactions
 
@@ -171,6 +173,7 @@ xsw.iloc[0:,0:]
 
 #df.loc[:, df.columns != 'date', 'CSUSHPINSA']
 list(df)
+list(x_and_y_with_interactions)
 
 #[1:int(split+1)]
 #X_train.iloc[1:-1,1:]
