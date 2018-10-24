@@ -74,7 +74,8 @@ df = pd.read_csv(input_file, header = 0)
 
 split=int(len(df.index))/2
 
-df
+
+
 
 xsw = df.drop(columns=['date', 'CSUSHPINSA','future'])[0:int(split+1)]
 
@@ -83,11 +84,13 @@ ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 xsw.iloc[0:,0:]
 
 #wout date
-#result = stepwise_selection(xsw.iloc[0:,1:220],ysw)
+result = stepwise_selection(xsw.iloc[0:,1:234],ysw)
 #xsw.iloc[0:,1:220]
 #result
-fs.f_regression(xsw.iloc[1:,101:102],ysw[1:],center=True)[0:]
-pylab.plot(xsw.iloc[1:,101:102],ysw[1:])
+#fs.f_regression(xsw.iloc[1:,121:122],ysw[1:],center=True)[0:]
+
+
+#pylab.plot(xsw.iloc[1:,121:122],ysw[1:])
 #ps = fs.f_regression(xsw.iloc[0:,1:220],ysw,center=TRUE)
 
 #x = df(columns=[result])[0:int(split+1)]
