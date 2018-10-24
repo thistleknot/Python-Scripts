@@ -77,7 +77,7 @@ split=int(len(df.index))/2
 
 
 
-xsw = df.drop(columns=['date', 'CSUSHPINSA','future'])[0:int(split+1)]
+xsw = df.drop(columns=['date', 'CSUSHPINSA'])[0:int(split+1)]
 
 ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 
