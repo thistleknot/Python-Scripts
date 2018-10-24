@@ -72,7 +72,7 @@ df = pd.read_csv(input_file, header = 0)
 split=int(len(df.index))/2
 
 #DCOILWTICO was not significant, most likely due to present of cpiaucsl
-x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DGS10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N']]
+x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N', 'DEXBZUS','GFDEBTN','M2V']]
 
 y = df.loc[0:, ['CSUSHPINSA']]
 #y
@@ -124,7 +124,7 @@ lm = linear_model.LinearRegression()
 x_and_y_with_interactions
 
 
-
+#should be checking and flagging both columns if na is found in any
 model_scikit = lm.fit(X_train.dropna(axis=1, how='all'), y_train)
 predictions = lm.predict(X_test.dropna(axis=1, how='all'))
 
@@ -160,7 +160,7 @@ xsw.iloc[0:,0:]
 
 #wout date
 #result = stepwise_selection(xsw.dropna(axis=1, how='all').iloc[0:,1:220],ysw)
-#'CSUSHPISA', 'DEXBZUS', 'UNRATENSA', 'UNRATE'
+#
 #result
 #[1:-1,1:]
 
