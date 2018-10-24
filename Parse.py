@@ -72,7 +72,9 @@ df = pd.read_csv(input_file, header = 0)
 split=int(len(df.index))/2
 
 #DCOILWTICO was not significant, most likely due to present of cpiaucsl
-x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N', 'DEXBZUS','GFDEBTN','M2V']]
+#adding these 3 breaks it ,'DEXBZUS','GFDEBTN','M2V'
+#GDPC1 & MEHOINUSA672N reports na?
+x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N','DEXBZUS','GFDEBTN','M2V']]
 
 y = df.loc[0:, ['CSUSHPINSA']]
 #y
@@ -100,7 +102,9 @@ y_future_yield = (y_future.iloc[1:-1,]-y.iloc[1:-1,])/y.iloc[1:-1,]
 y_future_interaction = (y_future.iloc[1:-1,]*y.iloc[1:-1,])
 
 x_and_y_with_yields = pd.concat([x.iloc[1:-1,1:], x_yield, y.iloc[1:-1,], y_yield], axis=1)
+
 x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], x_interaction, y.iloc[1:-1,], y_lagged.iloc[1:-1,], y_interaction], axis=1)
+
 
 # .938 Adj R^2
 #model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
@@ -109,11 +113,9 @@ x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], 
 #note: has to be +2
     #x_and_y_with_yields.loc
 #results_with_interactions = pd.concat([model.predict(x_and_y_with_interactions.loc[int(split+1):]), y_future_yield[int(split+1):]], axis=1)
-results = pd.concat([model.predict(x_and_y_with_yields.loc[int(split+1):]), y_future_yield[int(split+1):]], axis=1)
-
+#x_and_y_with_yields
 
 #model.params
-
 
 #scikit
 #https://towardsdatascience.com/train-test-split-and-cross-validation-in-python-80b61beca4b6
@@ -122,7 +124,6 @@ X_train, X_test, y_train, y_test = train_test_split(x_and_y_with_yields.loc[1:in
 lm = linear_model.LinearRegression()
 
 x_and_y_with_interactions
-
 
 #should be checking and flagging both columns if na is found in any
 model_scikit = lm.fit(X_train.dropna(axis=1, how='all'), y_train)
@@ -136,7 +137,7 @@ plt.xlabel("True Values")
 plt.ylabel("Predictions")
 
 print ("Score:", model_scikit.score(X_test.dropna(axis=1, how='all'), y_test))
-results
+#results
 
 
 #type(y_test)
@@ -144,16 +145,18 @@ results
 #predictions[0:,0:].tolist()
 #model.params
 #model.summary()
+
+#results = pd.concat([model.predict(x_and_y_with_yields.loc[int(split+1):]), y_future_yield[int(split+1):]], axis=1)
 print(model.summary())
-print(results)
-results.to_csv("results_1stHalf.csv")
+#print(results)
+#results.to_csv("results_1stHalf.csv")
 
 
 #model_with_interactions.summary()
 x_and_y_with_interactions
 
 #stepwise regression
-xsw = df.drop(columns=['date', 'CSUSHPINSA','future'])[0:int(split+1)]
+xsw = df.drop(columns=['date', 'CSUSHPINSA'])[0:int(split+1)]
 ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 
 xsw.iloc[0:,0:]
@@ -164,10 +167,10 @@ xsw.iloc[0:,0:]
 #result
 #[1:-1,1:]
 
-
+#df.loc[:,['MEHOINUSA672N']]
 
 #df.loc[:, df.columns != 'date', 'CSUSHPINSA']
-
+list(df)
 
 #[1:int(split+1)]
 #X_train.iloc[1:-1,1:]
