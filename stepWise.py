@@ -8,8 +8,13 @@ import pandas as pd
 import sklearn.model_selection as ms
 import statsmodels.api as sm
 
+import sklearn.feature_selection as fs
+
 #stepwise
 #https://datascience.stackexchange.com/questions/24405/how-to-do-stepwise-regression-using-sklearn/24447#24447
+#Stating that OLS is just not good enough compared to other methods is misleading. For a linearly separable dataset where the Gauss-Markov assumptions are satisfied, OLS will be more efficient than any other linear or nonlinear method. It's more of a question of data and model structure than anything else. – Digio
+#As far as I understand, p-values (1) are a very specific interpretation of a single OLS algorithm, and (2) are useful for inference (to decide whether a single predictor matters), but not so useful for prediction (model with lots of bad p-values may have good predictive power, and vice versa) – David Dale (author of code and answer)
+
 def stepwise_selection(X, y, 
                        initial_list=[], 
                        threshold_in=0.01, 
@@ -71,13 +76,17 @@ split=int(len(df.index))/2
 df
 
 xsw = df.drop(columns=['date', 'CSUSHPINSA','future'])[0:int(split+1)]
+
 ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 
 xsw.iloc[0:,0:]
 
 #wout date
-result = stepwise_selection(xsw.iloc[0:,1:220],ysw)
+#result = stepwise_selection(xsw.iloc[0:,1:220],ysw)
+#xsw.iloc[0:,1:220]
+#result
+fs.f_regression(xsw.iloc[1:,1:2],ysw[1:],center=True)
 
-type(result)
+#ps = fs.f_regression(xsw.iloc[0:,1:220],ysw,center=TRUE)
 
 #x = df(columns=[result])[0:int(split+1)]
