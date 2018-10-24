@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt 
 import numpy as np 
+import pylab
 from sklearn import datasets, linear_model, metrics 
 from sklearn.model_selection import train_test_split
 
@@ -85,8 +86,8 @@ xsw.iloc[0:,0:]
 #result = stepwise_selection(xsw.iloc[0:,1:220],ysw)
 #xsw.iloc[0:,1:220]
 #result
-fs.f_regression(xsw.iloc[1:,1:2],ysw[1:],center=True)
-
+fs.f_regression(xsw.iloc[1:,101:102],ysw[1:],center=True)[0:]
+pylab.plot(xsw.iloc[1:,101:102],ysw[1:])
 #ps = fs.f_regression(xsw.iloc[0:,1:220],ysw,center=TRUE)
 
 #x = df(columns=[result])[0:int(split+1)]
