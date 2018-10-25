@@ -8,6 +8,8 @@ import pandas as pd
 import sklearn.model_selection as ms
 import statsmodels.api as sm
 
+lm = linear_model.LinearRegression()
+
 #stepwise
 #https://datascience.stackexchange.com/questions/24405/how-to-do-stepwise-regression-using-sklearn/24447#24447
 def stepwise_selection(X, y, 
@@ -76,15 +78,14 @@ split=int(len(df.index))/2
 #GDPC1 & MEHOINUSA672N reports na?
 #x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N','DEXBZUS','GFDEBTN','M2V']]
 
-
-#x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N','DEXBZUS','GFDEBTN','M2V']]
+#.938 adj R^2
+x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N','DEXBZUS','GFDEBTN','M2V']]
 #x = df.loc[0:, ['date','CSUSHPISA','CUUR0000SETB01','LNU01300060','UNRATENSA','UNEMPLOY','SP500','DFII10','T5YIFR','T10YIE','T5YIE','PCECTPICTM','CD12NRNJ','DFII5','DFII30','VXTYN','VXVCLS','DFII7','TREAST','INTGSBINM193N','LNS11300060','BAMLH0A1HYBB']]
-x = df.loc[0:, ['date','CUUR0000SETB01','LNU01300060','UNRATENSA','UNEMPLOY','SP500','DFII10','T5YIFR','T10YIE','T5YIE','PCECTPICTM','CD12NRNJ','DFII5','DFII30','VXTYN','VXVCLS','DFII7','TREAST','INTGSBINM193N','LNS11300060','BAMLH0A1HYBB']]
+
+#.901 adj R^2
+#x = df.loc[0:, ['date','CUUR0000SETB01','LNU01300060','UNRATENSA','UNEMPLOY','SP500','DFII10','T5YIFR','T10YIE','T5YIE','PCECTPICTM','CD12NRNJ','DFII5','DFII30','VXTYN','VXVCLS','DFII7','TREAST','INTGSBINM193N','LNS11300060','BAMLH0A1HYBB']]
 
 y = df.loc[0:, ['CSUSHPINSA']]
-#y
-
-
 
 #offset
 x_lagged = x.shift(+1)
@@ -112,16 +113,16 @@ x_and_y_with_yields = pd.concat([x.iloc[1:-1,1:], x_yield, y.iloc[1:-1,], y_yiel
 
 x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], x_interaction, y.iloc[1:-1,], y_lagged.iloc[1:-1,], y_interaction], axis=1)
 
-
 model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
 model.summary()
 # .938 Adj R^2
-#model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
-#model_with_interactions = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_interactions.loc[1:int(split+1)]).fit()
+
+model_with_interactions = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_interactions.loc[1:int(split+1)]).fit()
 
 #note: has to be +2
     #x_and_y_with_yields.loc
-#results_with_interactions = pd.concat([model.predict(x_and_y_with_interactions.loc[int(split+1):]), y_future_yield[int(split+1):]], axis=1)
+#
+
 #x_and_y_with_yields
 
 #model.params
@@ -129,8 +130,6 @@ model.summary()
 #scikit
 #https://towardsdatascience.com/train-test-split-and-cross-validation-in-python-80b61beca4b6
 X_train, X_test, y_train, y_test = train_test_split(x_and_y_with_yields.loc[1:int(split+1)], y_future_yield.loc[1:int(split+1)], test_size=0.2)
-
-lm = linear_model.LinearRegression()
 
 #should be checking and flagging both columns if na is found in any
 model_scikit = lm.fit(X_train.dropna(axis=1, how='all'), y_train)
@@ -144,21 +143,6 @@ plt.xlabel("True Values")
 plt.ylabel("Predictions")
 
 print ("Score:", model_scikit.score(X_test.dropna(axis=1, how='all'), y_test))
-#results
-
-#type(y_test)
-#type(predictions)
-#predictions[0:,0:].tolist()
-#model.params
-#model.summary()
-
-#results = pd.concat([model.predict(x_and_y_with_yields.loc[int(split+1):]), y_future_yield[int(split+1):]], axis=1)
-#print(model.summary())
-#print(results)
-#results.to_csv("results_1stHalf.csv")
-
-#model_with_interactions.summary()
-
 
 #stepwise regression
 xsw = df.drop(columns=['date', 'CSUSHPINSA'])[0:int(split+1)]
@@ -166,17 +150,17 @@ ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 
 xsw.iloc[0:,0:]
 
-#wout date
-#result = stepwise_selection(xsw.dropna(axis=1, how='all').iloc[0:,1:220],ysw)
-#
-#result
-#[1:-1,1:]
+print(model_with_interactions.summary())
 
-#df.loc[:,['MEHOINUSA672N']]
 
-#df.loc[:, df.columns != 'date', 'CSUSHPINSA']
-list(df)
-list(x_and_y_with_interactions)
+#off by 1
+#x_and_y_with_interactions.loc[int(split+1):]
 
-#[1:int(split+1)]
-#X_train.iloc[1:-1,1:]
+#x_and_y_with_interactions.loc[int(split+1):]
+
+#y_future_yield[int(split+1):]
+
+#model.predict(
+               #results_with_interactions = pd.concat(), y_future_yield[int(split+1):]], axis=1)
+    
+#results_with_interactions = pd.concat([model.predict(x_and_y_with_interactions.loc[int(split+1):]), y_future_yield[int(split+1):]], axis=1)
