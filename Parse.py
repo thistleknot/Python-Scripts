@@ -79,14 +79,29 @@ split=int(len(df.index))/2
 #x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N','DEXBZUS','GFDEBTN','M2V']]
 
 #.938 adj R^2
-x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N','DEXBZUS','GFDEBTN','M2V']]
-#x = df.loc[0:, ['date','CSUSHPISA','CUUR0000SETB01','LNU01300060','UNRATENSA','UNEMPLOY','SP500','DFII10','T5YIFR','T10YIE','T5YIE','PCECTPICTM','CD12NRNJ','DFII5','DFII30','VXTYN','VXVCLS','DFII7','TREAST','INTGSBINM193N','LNS11300060','BAMLH0A1HYBB']]
+#x = df.loc[0:, ['date','CPIAUCSL','PSAVERT','GDPC1','DFII10','UMCSENT','EMRATIO','POPTOTUSA647NWDB','TTLHH','MEHOINUSA672N','DEXBZUS','GFDEBTN','M2V']]
+
 
 #.901 adj R^2
-#x = df.loc[0:, ['date','CUUR0000SETB01','LNU01300060','UNRATENSA','UNEMPLOY','SP500','DFII10','T5YIFR','T10YIE','T5YIE','PCECTPICTM','CD12NRNJ','DFII5','DFII30','VXTYN','VXVCLS','DFII7','TREAST','INTGSBINM193N','LNS11300060','BAMLH0A1HYBB']]
-
+#x = df.loc[0:, ['date','CSUSHPISA','CUUR0000SETB01','LNU01300060','UNRATENSA','UNEMPLOY','SP500','DFII10','T5YIFR','T10YIE','T5YIE','PCECTPICTM','CD12NRNJ','DFII5','DFII30','VXTYN','VXVCLS','DFII7','TREAST','INTGSBINM193N','LNS11300060','BAMLH0A1HYBB']]
+x = df.loc[0:, [
+    #'CSUSHPISA',
+ 'CUUR0000SETB01',
+# 'DCOILBRENTEU',
+# 'RECPROUSM156N',
+ 'CPIHOSNS',
+ 'CPALTT01USM661S',
+ 'PAYNSA',
+ 'CUUR0000SEHA',
+ 'CPIAUCSL',
+ 'LNS12300060',
+ 'GS5',
+ 'CUUR0000SETA01',
+# 'CPILFESL',
+# 'CPILFENS',
+ 'PCECTPICTM']]
 y = df.loc[0:, ['CSUSHPINSA']]
-
+#,'RECPROUSM156N','CPIHOSNS','CPALTT01USM661','PAYNSA','CUUR0000SEHA','CPIAUCSL','LNS12300060','GS5','CUUR0000SETA01','CPILFESL','CPILFENS','PCECTPICTM'
 #offset
 x_lagged = x.shift(+1)
 y_lagged = y.shift(+1)
@@ -111,21 +126,14 @@ y_future_interaction = (y_future.iloc[1:-1,]*y.iloc[1:-1,])
 
 x_and_y_with_yields = pd.concat([x.iloc[1:-1,1:], x_yield, y.iloc[1:-1,], y_yield], axis=1)
 
+#I include the dependent variable as a predictor
 x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], x_interaction, y.iloc[1:-1,], y_lagged.iloc[1:-1,], y_interaction], axis=1)
-
+#.902
 model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
 model.summary()
 # .938 Adj R^2
 
 model_with_interactions = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_interactions.loc[1:int(split+1)]).fit()
-
-#note: has to be +2
-    #x_and_y_with_yields.loc
-#
-
-#x_and_y_with_yields
-
-#model.params
 
 #scikit
 #https://towardsdatascience.com/train-test-split-and-cross-validation-in-python-80b61beca4b6
@@ -150,15 +158,25 @@ ysw = df.loc[0:,'CSUSHPINSA'][0:int(split+1)]
 
 xsw.iloc[0:,0:]
 
-print(model_with_interactions.summary())
+#print(model.summary())
 
+#split+1 to EOF (192)
+#x_and_y_with_yields.loc[int(split+1):]
 
-#off by 1
-#x_and_y_with_interactions.loc[int(split+1):]
+#split+1 (192)
+#y_future_yield.loc[int(split+1):]
+
+#1-split+1
+#x_and_y_with_yields.loc[1:int(split+1)]
+
+#1-split+1
+#y_future_yield.loc[1:int(split+1)]
+
 
 #x_and_y_with_interactions.loc[int(split+1):]
 
 #y_future_yield[int(split+1):]
+
 
 #model.predict(
                #results_with_interactions = pd.concat(), y_future_yield[int(split+1):]], axis=1)
