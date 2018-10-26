@@ -36,7 +36,7 @@ x = df.loc[0:, [
     #'CSUSHPISA',
  'CUUR0000SETB01',
 # 'DCOILBRENTEU',
- 'RECPROUSM156N',
+#'RECPROUSM156N',
  'CPIHOSNS',
  'CPALTT01USM661S',
  'PAYNSA',
@@ -78,11 +78,11 @@ x_and_y_with_yields = pd.concat([x.iloc[1:-1,1:], x_yield, y.iloc[1:-1,], y_yiel
 x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], x_interaction, y.iloc[1:-1,], y_lagged.iloc[1:-1,], y_interaction], axis=1)
 #.902
 
-#pylab.plot(y[1:],x_interaction.loc[1:,'RECPROUSM156N']
+#pylab.plot(y[1:],x_interaction.loc[1:,'RECPROUSM156N'])
 
-model = sm.OLS(y_future_yield.loc[1:int(split+1)], df.loc[1:int(split+1)],'RECPROUSM156N').fit()
+#model = sm.OLS(y_future_yield.loc[1:int(split+1)], df.loc[1:int(split+1),'RECPROUSM156N']).fit()
 
-#model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
+model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
 model.summary()
 # .938 Adj R^2
 
