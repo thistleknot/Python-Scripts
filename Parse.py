@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np 
 from sklearn import datasets, linear_model, metrics 
 from sklearn.model_selection import train_test_split
+import pylab
 
 import numpy as np
 import pandas as pd
@@ -9,59 +10,6 @@ import sklearn.model_selection as ms
 import statsmodels.api as sm
 
 lm = linear_model.LinearRegression()
-
-#stepwise
-#https://datascience.stackexchange.com/questions/24405/how-to-do-stepwise-regression-using-sklearn/24447#24447
-def stepwise_selection(X, y, 
-                       initial_list=[], 
-                       threshold_in=0.01, 
-                       threshold_out = 0.05, 
-                       verbose=True):
-    """ Perform a forward-backward feature selection 
-    based on p-value from statsmodels.api.OLS
-    Arguments:
-        X - pandas.DataFrame with candidate features
-        y - list-like with the target
-        initial_list - list of features to start with (column names of X)
-        threshold_in - include a feature if its p-value < threshold_in
-        threshold_out - exclude a feature if its p-value > threshold_out
-        verbose - whether to print the sequence of inclusions and exclusions
-    Returns: list of selected features 
-    Always set threshold_in < threshold_out to avoid infinite looping.
-    See https://en.wikipedia.org/wiki/Stepwise_regression for the details
-    """
-    included = list(initial_list)
-    while True:
-        changed=False
-        # forward step
-        excluded = list(set(X.columns)-set(included))
-        new_pval = pd.Series(index=excluded)
-        for new_column in excluded:
-            model = sm.OLS(y, sm.add_constant(pd.DataFrame(X[included+[new_column]]))).fit()
-            new_pval[new_column] = model.pvalues[new_column]
-        best_pval = new_pval.min()
-        if best_pval < threshold_in:
-            best_feature = new_pval.idxmin()
-            included.append(best_feature)
-            changed=True
-            if verbose:
-                print('Add  {:30} with p-value {:.6}'.format(best_feature, best_pval))
-
-        # backward step
-        model = sm.OLS(y, sm.add_constant(pd.DataFrame(X[included]))).fit()
-        # use all coefs except intercept
-        pvalues = model.pvalues.iloc[1:]
-        worst_pval = pvalues.max() # null if pvalues is empty
-        if worst_pval > threshold_out:
-            changed=True
-            worst_feature = pvalues.idxmax()
-            included.remove(worst_feature)
-            if verbose:
-                print('Drop {:30} with p-value {:.6}'.format(worst_feature, worst_pval))
-        if not changed:
-            break
-    return included
-
 
 #from numpy import percentile
 
@@ -88,7 +36,7 @@ x = df.loc[0:, [
     #'CSUSHPISA',
  'CUUR0000SETB01',
 # 'DCOILBRENTEU',
-# 'RECPROUSM156N',
+ 'RECPROUSM156N',
  'CPIHOSNS',
  'CPALTT01USM661S',
  'PAYNSA',
@@ -129,7 +77,12 @@ x_and_y_with_yields = pd.concat([x.iloc[1:-1,1:], x_yield, y.iloc[1:-1,], y_yiel
 #I include the dependent variable as a predictor
 x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], x_interaction, y.iloc[1:-1,], y_lagged.iloc[1:-1,], y_interaction], axis=1)
 #.902
-model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
+
+#pylab.plot(y[1:],x_interaction.loc[1:,'RECPROUSM156N']
+
+model = sm.OLS(y_future_yield.loc[1:int(split+1)], df.loc[1:int(split+1)],'RECPROUSM156N').fit()
+
+#model = sm.OLS(y_future_yield.loc[1:int(split+1)], x_and_y_with_yields.loc[1:int(split+1)]).fit()
 model.summary()
 # .938 Adj R^2
 
@@ -176,6 +129,18 @@ xsw.iloc[0:,0:]
 #x_and_y_with_interactions.loc[int(split+1):]
 
 #y_future_yield[int(split+1):]
+
+#x_and_y_with_interactions = pd.concat([x.iloc[1:-1,1:], x_lagged.iloc[1:-1,1:], x_interaction, y.iloc[1:-1,], y_lagged.iloc[1:-1,], y_interaction], axis=1)
+
+
+    
+#x.loc[1:,'PCECTPICTM']
+#x.loc[1:,'PCECTPICTM']
+#df.loc[1:,'RECPROUSM156N']
+#pylab.plot(y[1:],df.loc[1:,'RECPROUSM156N'])
+
+#x_and_y_with_interactions.loc[int(split+1):,'PCECTPICTM']
+
 
 
 #model.predict(
