@@ -1,20 +1,20 @@
-import matplotlib.pyplot as plt 
-import numpy as np 
-import pylab
+from sklearn.datasets import load_boston
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
 from sklearn import datasets, linear_model, metrics 
 from sklearn.model_selection import train_test_split
 
-import numpy as np
-import pandas as pd
-import sklearn.model_selection as ms
-import statsmodels.api as sm
+input_file = "parsed.csv"
 
-import sklearn.feature_selection as fs
+#https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
+df = pd.read_csv(input_file, header = 0, index_col=0)
 
-#stepwise
-#https://datascience.stackexchange.com/questions/24405/how-to-do-stepwise-regression-using-sklearn/24447#24447
-#Stating that OLS is just not good enough compared to other methods is misleading. For a linearly separable dataset where the Gauss-Markov assumptions are satisfied, OLS will be more efficient than any other linear or nonlinear method. It's more of a question of data and model structure than anything else. – Digio
-#As far as I understand, p-values (1) are a very specific interpretation of a single OLS algorithm, and (2) are useful for inference (to decide whether a single predictor matters), but not so useful for prediction (model with lots of bad p-values may have good predictive power, and vice versa) – David Dale (author of code and answer)
+#x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
+x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
+y = df.loc[0:,['CSUSHPINSA']]
+
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
 
 def stepwise_selection(X, y, 
                        initial_list=[], 
@@ -66,50 +66,25 @@ def stepwise_selection(X, y,
             break
     return included
 
-#from numpy import percentile
+#xLagged = x.shift(+1)
+#yLagged = y.shift(+1)
+#yFuture = y.shift(-1)
+#yYield = (yLagged-y)/yLagged
+#yFutureYield = (yFuture-y)/y
 
-input_file = "parsed.csv"
+symbols = ['x', 'lagged', 'interaction', 'y', 'y_yield']
 
-df = pd.read_csv(input_file, header = 0)
-
-split=int(len(df.index))/2
-
-
-x = df.drop(columns=['date','CSUSHPISA','CSUSHPINSA'])[242:]
-xLagged = x.shift(+1)
+set1 = pd.concat([x,xLagged,x*xLagged,y,yYield], keys=['x', 'lagged', 'interaction', 'y', 'y_yield'], axis=1, names=['symbols'])
 
 
-y = df.loc[0:,['CSUSHPINSA']]
-yLagged = y.shift(+1)
-yYield = getYield(y)
+result = stepwise_selection(X_train, y_train)
 
-set = pd.concat([x,xLagged,x*xLagged], axis=1)
- 
-model = sm.OLS(y,set,missing = 'drop').fit()
-model.summary()
+#yFutureYield.loc[2:,][:-1]
+#set1.loc[2:,][:-1]
+#X_train
+#y_train
+#set1.loc[2:,][:-1].head(5)
+#set1.loc[1:,][:-1].tail(5)
 
-
-xsw = df.drop(columns=['date','CSUSHPISA','CSUSHPINSA'])[242:]
-
-ysw = df.loc[0:,'CSUSHPINSA'][242:]
-
-xsw.iloc[0:,0:]
-
-#wout date
-result = stepwise_selection(xsw.iloc[0:,1:],ysw)
-
-#xsw.iloc[0:,1:220]
-result
-#fs.f_regression(xsw.iloc[1:,121:122],ysw[1:],center=True)[0:]
-
-
-#newcol = np.log(df.loc[0:,'RECPROUSM156N'][242:])
-#df.assign(ln_A=newcol)
-
-#df.loc[0:,'ln_A'][242:]
-#df.loc[0:,'RECPROUSM156N'][242:]
-
-#pylab.plot(xsw.iloc[1:,121:122],ysw[1:])
-#ps = fs.f_regression(xsw.iloc[0:,1:220],ysw,center=TRUE)
-
-#x = df(columns=[result])[0:int(split+1)]
+#yFutureYield.loc[1:,][:-1].head(5)
+#yFutureYield.loc[1:,][:-1].tail(5)
