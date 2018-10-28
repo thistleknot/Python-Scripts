@@ -9,6 +9,7 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
+import random
 
 %matplotlib inline
 plt.style.use('ggplot')
@@ -26,10 +27,31 @@ def fit_linear_reg(X,Y):
 #Importing tqdm for the progress bar
 from tqdm import tnrange, tqdm_notebook
 
+#splitEnd = ((len(
+    
+
 #Initialization variables
+
+
+
+
 Y = housing.loc[0:,'CSUSHPINSA'][242:]
+
+
 X = housing.drop(columns=['date','CSUSHPINSA'])[242:]
-k = len(X.columns)
+
+rows = Y.shape[0]
+
+yset = random.sample(range(len(X.columns)), int(len(X.columns)*.50))
+xset = random.sample(range(rows), int(rows*.50))
+
+#y = Y[c(xset),yset]
+#x = X[xset,yset]
+#Y.iloc[0:,yset]
+
+#y = Y.sample(int(len(X.columns)*.50))
+
+k = 11
 #X = credit.drop(columns = 'Balance', axis = 1)
 
 RSS_list, R_squared_list, feature_list = [],[], []
