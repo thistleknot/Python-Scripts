@@ -33,7 +33,6 @@ x = df.loc[0:,[
 'CPILFENS',
 'PCECTPICTM'
 ]]
-
 xLagged = x.shift(+1)
 
 y = df.loc[0:,['CSUSHPINSA']]
@@ -43,19 +42,12 @@ yYield = (yLagged-y)/yLagged
 yFutureYield = (yFuture-y)/y
 
 set1 = pd.concat([x,xLagged,x*xLagged,y,yYield], axis=1)
+#set1 = pd.concat([x,xLagged,x*xLagged], axis=1)
 
-#remove top and bottom row
-X_train, X_test, y_train, y_test = train_test_split(set1.loc[1:,][:-1], yFutureYield.loc[1:,][:-1], test_size=0.2)
+#this model doesn't require this subsetting
+#set1.loc[1:,][:-1]
+model = sm.OLS(yFutureYield,set1,missing = 'drop').fit()
+model.summary()
 
-#should be checking and flagging both columns if na is found in any
-model_scikit = lm.fit(X_train.dropna(axis=1, how='all'), y_train)
-predictions = lm.predict(X_test.dropna(axis=1, how='all'))
-
-predictions.shape[0]
-y_test.shape[0]
-#pd.concat([predictions,y_test],axis=1)
-plt.scatter(y_test, predictions)
-plt.xlabel("True Values")
-plt.ylabel("Predictions")
-
-print ("Score:", model_scikit.score(X_test.dropna(axis=1, how='all'), y_test))
+#output model records
+#pd.concat([set1,yFutureYield],axis=1)

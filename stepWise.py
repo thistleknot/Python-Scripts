@@ -72,12 +72,24 @@ input_file = "parsed.csv"
 
 df = pd.read_csv(input_file, header = 0)
 
-#split=int(len(df.index))/2
+split=int(len(df.index))/2
 
 
+x = df.drop(columns=['date','CSUSHPISA','CSUSHPINSA'])[242:]
+xLagged = x.shift(+1)
 
 
-xsw = df.drop(columns=['date', 'CSUSHPINSA'])[242:]
+y = df.loc[0:,['CSUSHPINSA']]
+yLagged = y.shift(+1)
+yYield = getYield(y)
+
+set = pd.concat([x,xLagged,x*xLagged], axis=1)
+ 
+model = sm.OLS(y,set,missing = 'drop').fit()
+model.summary()
+
+
+xsw = df.drop(columns=['date','CSUSHPISA','CSUSHPINSA'])[242:]
 
 ysw = df.loc[0:,'CSUSHPINSA'][242:]
 
@@ -85,11 +97,18 @@ xsw.iloc[0:,0:]
 
 #wout date
 result = stepwise_selection(xsw.iloc[0:,1:],ysw)
+
 #xsw.iloc[0:,1:220]
 result
 #fs.f_regression(xsw.iloc[1:,121:122],ysw[1:],center=True)[0:]
 
+
+#newcol = np.log(df.loc[0:,'RECPROUSM156N'][242:])
+#df.assign(ln_A=newcol)
+
+#df.loc[0:,'ln_A'][242:]
 #df.loc[0:,'RECPROUSM156N'][242:]
+
 #pylab.plot(xsw.iloc[1:,121:122],ysw[1:])
 #ps = fs.f_regression(xsw.iloc[0:,1:220],ysw,center=TRUE)
 
