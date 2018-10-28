@@ -10,6 +10,8 @@ input_file = "parsed.csv"
 #https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
 df = pd.read_csv(input_file, header = 0, index_col=0)
 
+#def train_test_split2(X, y)
+
 def stepwise_selection(X, y, 
                        initial_list=[], 
                        threshold_in=0.01, 
@@ -65,26 +67,49 @@ x = df.drop(columns=['date','CSUSHPINSA']).sample(50, axis=1)
 y = df.loc[0:,['CSUSHPINSA']]
 
 xLagged = x.shift(+1)
-xLagged.add_prefix('xLag_')
 yLagged = y.shift(+1)
-yLagged.add_prefix('yLag_')
 yFuture = y.shift(-1)
-yFuture.add_prefix('yFut_')
 yYield = (yLagged-y)/yLagged
-yYield.add_prefix('yYield_')
 yFutureYield = (yFuture-y)/y
-yFutureYield.add_prefix('yFutYield_')
 
 symbols = ['x', 'lagged', 'interaction', 'y', 'y_yield']
 
+#without prefix, the next stepwise command gets confused on column names...
+#would be best to only pass x, and then backjoin to these other derived values to do step_wise on
 set1 = pd.concat([x,xLagged.add_prefix('xLag_'),(x*xLagged).add_prefix('xInter_'),y.add_prefix('y_'),yYield.add_prefix('yYield_')], names=['symbols'],axis=1)
-set1
 
-X_train, X_test, y_train, y_test = train_test_split(set1.loc[2:,][:-1], yFutureYield.loc[2:,][:-1], test_size=0.25)
+X_train, X_test, y_train, y_test = train_test_split(x.loc[2:,][:-1], yFutureYield.loc[2:,][:-1], test_size=0.25)
 
 result = stepwise_selection(X_train, y_train)
 
-#yFutureYield.loc[2:,][:-1]
-#set1.loc[2:,][:-1]
-#X_train
-#y_train
+
+print(result)
+
+#filtered
+my_list = set1[result]
+
+#all columns
+all_list = list(set1)
+
+list2 = result
+for i in range(1, len(list(result))):
+    
+        xInter_ = "xInter_" + result[i]
+        list2.append(xInter_)
+        xLag_ = "xLag_" + result[i]
+        list2.append(xLag_)
+        
+        continue
+    
+train_index = X_train.index
+
+#https://stackoverflow.com/questions/19155718/select-pandas-rows-based-on-list-index
+set1[list2].ix[train_index]
+
+
+#model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
+#X_train.filter(items=[result], axis=0)
+
+#x.filter(regex=result)
+
+        
