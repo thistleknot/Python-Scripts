@@ -92,7 +92,7 @@ my_list = set1[result]
 all_list = list(set1)
 
 list2 = result
-for i in range(1, len(list(result))):
+for i in range(0, len(list(result))):
     
         xInter_ = "xInter_" + result[i]
         list2.append(xInter_)
@@ -100,14 +100,32 @@ for i in range(1, len(list(result))):
         list2.append(xLag_)
         
         continue
-    
+
+#get RNG list from X_train output of prior train_test_split
 train_index = X_train.index
 
+print(list2)
 #https://stackoverflow.com/questions/19155718/select-pandas-rows-based-on-list-index
 set1[list2].loc[train_index]
 
 result2 = stepwise_selection(set1[list2].loc[train_index], y_train)
 print(result2)
+
+list3 = result2
+for i in range(0, len(list(result2))):
+    
+        temp = result[i]
+        if temp.startswith("xInter_"):
+            list3.append(temp[-7:])
+            #continue
+        elif temp.startswith("xLag_"):
+            list3.append(temp[-5:])
+            #continue
+        #continue
+    
+#print(list3)
+
+set(list3)
 
 #model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
 #X_train.filter(items=[result], axis=0)
