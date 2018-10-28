@@ -104,8 +104,10 @@ for i in range(1, len(list(result))):
 train_index = X_train.index
 
 #https://stackoverflow.com/questions/19155718/select-pandas-rows-based-on-list-index
-set1[list2].ix[train_index]
+set1[list2].loc[train_index]
 
+result2 = stepwise_selection(set1[list2].loc[train_index], y_train)
+print(result2)
 
 #model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
 #X_train.filter(items=[result], axis=0)
