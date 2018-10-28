@@ -58,4 +58,12 @@ plt.scatter(y_test, predictions)
 plt.xlabel("True Values")
 plt.ylabel("Predictions")
 
-print ("Score:", model_scikit.score(X_test.dropna(axis=1, how='all'), y_test))
+model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
+model_training.summary()
+
+#model_testing = sm.OLS(t_test,Y_train,missing = 'drop').fit()
+#model_testing.summary()
+print(pd.concat([model_training.predict(X_test),y_test],axis=1))
+
+print ("Train Score:", model_scikit.score(X_train.dropna(axis=1, how='all'), y_train))
+print ("Test Score:", model_scikit.score(X_test.dropna(axis=1, how='all'), y_test))
