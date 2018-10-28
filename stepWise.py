@@ -10,12 +10,6 @@ input_file = "parsed.csv"
 #https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
 df = pd.read_csv(input_file, header = 0, index_col=0)
 
-#x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
-x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
-y = df.loc[0:,['CSUSHPINSA']]
-
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
-
 def stepwise_selection(X, y, 
                        initial_list=[], 
                        threshold_in=0.01, 
@@ -66,16 +60,27 @@ def stepwise_selection(X, y,
             break
     return included
 
-#xLagged = x.shift(+1)
-#yLagged = y.shift(+1)
-#yFuture = y.shift(-1)
-#yYield = (yLagged-y)/yLagged
-#yFutureYield = (yFuture-y)/y
+#x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
+x = df.drop(columns=['date','CSUSHPINSA']).sample(50, axis=1)
+y = df.loc[0:,['CSUSHPINSA']]
+
+xLagged = x.shift(+1)
+xLagged.add_prefix('xLag_')
+yLagged = y.shift(+1)
+yLagged.add_prefix('yLag_')
+yFuture = y.shift(-1)
+yFuture.add_prefix('yFut_')
+yYield = (yLagged-y)/yLagged
+yYield.add_prefix('yYield_')
+yFutureYield = (yFuture-y)/y
+yFutureYield.add_prefix('yFutYield_')
 
 symbols = ['x', 'lagged', 'interaction', 'y', 'y_yield']
 
-set1 = pd.concat([x,xLagged,x*xLagged,y,yYield], keys=['x', 'lagged', 'interaction', 'y', 'y_yield'], axis=1, names=['symbols'])
+set1 = pd.concat([x,xLagged.add_prefix('xLag_'),(x*xLagged).add_prefix('xInter_'),y.add_prefix('y_'),yYield.add_prefix('yYield_')], names=['symbols'],axis=1)
+set1
 
+X_train, X_test, y_train, y_test = train_test_split(set1.loc[2:,][:-1], yFutureYield.loc[2:,][:-1], test_size=0.25)
 
 result = stepwise_selection(X_train, y_train)
 
@@ -83,8 +88,3 @@ result = stepwise_selection(X_train, y_train)
 #set1.loc[2:,][:-1]
 #X_train
 #y_train
-#set1.loc[2:,][:-1].head(5)
-#set1.loc[1:,][:-1].tail(5)
-
-#yFutureYield.loc[1:,][:-1].head(5)
-#yFutureYield.loc[1:,][:-1].tail(5)
