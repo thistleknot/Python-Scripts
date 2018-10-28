@@ -63,7 +63,7 @@ def stepwise_selection(X, y,
     return included
 
 #x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
-x = df.drop(columns=['date','CSUSHPINSA']).sample(50, axis=1)
+x = df.drop(columns=['date','CSUSHPINSA']).sample(100, axis=1)
 y = df.loc[0:,['CSUSHPINSA']]
 
 xLagged = x.shift(+1)
@@ -103,6 +103,7 @@ for i in range(0, len(list(result))):
 
 #get RNG list from X_train output of prior train_test_split
 train_index = X_train.index
+test_index = X_test.index
 
 print(list2)
 #https://stackoverflow.com/questions/19155718/select-pandas-rows-based-on-list-index
@@ -138,9 +139,16 @@ print(list3)
     
 list(set(list3))
 
-xsubset = set1[list(set(list3))].loc[train_index]
-model_training = sm.OLS(y_train,xsubset,missing = 'drop').fit()
+xTrainSubset = set1[list(set(list3))].loc[train_index]
+xTestSubset = set1[list(set(list3))].loc[test_index]
+
+
+model_training = sm.OLS(y_train,xTrainSubset,missing = 'drop').fit()
 print(model_training.summary())
+
+model_testing = sm.OLS(y_test,xTestSubset,missing = 'drop').fit()
+print(model_testing.summary())
+
 #problem is duplicates aren't excluded, trying to use set didn't work
 
 
