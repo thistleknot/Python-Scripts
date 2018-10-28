@@ -114,18 +114,34 @@ print(result2)
 list3 = result2
 for i in range(0, len(list(result2))):
     
-        temp = result[i]
-        if temp.startswith("xInter_"):
-            list3.append(temp[-7:])
+        temp = result2[i]
+        
+        print(result2[i].startswith( 'xInter_' ))        
+        if result2[i].startswith( 'xInter_' ):
+            print(result2[i][7:])
+            list3.append(result2[i][7:])
+            continue
+        
+        print(result2[i].startswith( 'xLag_' ))
+        if result2[i].startswith( 'xLag_' ):
+            print(result2[i][5:])
+            list3.append(result2[i][5:])
             #continue
-        elif temp.startswith("xLag_"):
-            list3.append(temp[-5:])
-            #continue
-        #continue
+            continue
     
-#print(list3)
+print(list3)
 
-set(list3)
+#model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
+#X_train.filter(items=[result], axis=0)
+
+#x.filter(regex=result)
+    
+list(set(list3))
+set1[list(set(list3))].loc[train_index]
+#problem is duplicates aren't excluded, trying to use set didn't work
+
+
+#set1[list(set(list3))].loc[train_index]
 
 #model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
 #X_train.filter(items=[result], axis=0)
