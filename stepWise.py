@@ -137,13 +137,16 @@ print(list3)
 #x.filter(regex=result)
     
 list(set(list3))
-set1[list(set(list3))].loc[train_index]
+
+xsubset = set1[list(set(list3))].loc[train_index]
+model_training = sm.OLS(y_train,xsubset,missing = 'drop').fit()
+print(model_training.summary())
 #problem is duplicates aren't excluded, trying to use set didn't work
 
 
 #set1[list(set(list3))].loc[train_index]
 
-#model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
+
 #X_train.filter(items=[result], axis=0)
 
 #x.filter(regex=result)
