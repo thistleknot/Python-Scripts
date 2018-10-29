@@ -116,18 +116,28 @@ list3 = result2
 for i in range(0, len(list(result2))):
     
         temp = result2[i]
+        #tempXLag="xLag_" + result2[i]
+        #tempXInter = "xInter_" + result2[i]
         
-        print(result2[i].startswith( 'xInter_' ))        
+        #print(result2[i].startswith( 'xInter_' ))        
         if result2[i].startswith( 'xInter_' ):
             print(result2[i][7:])
-            list3.append(result2[i][7:])
+            list3.append(result2[i][7:])           
+            list3.append('xLag_' + result2[i][7:]) 
+            
             continue
         
-        print(result2[i].startswith( 'xLag_' ))
-        if result2[i].startswith( 'xLag_' ):
+            #print(result2[i].startswith( 'xLag_' ))
+        elif result2[i].startswith( 'xLag_' ):
             print(result2[i][5:])
             list3.append(result2[i][5:])
+            list3.append('xInter_' + result2[i][5:])
+            continue
             #continue
+            
+        else:
+            list3.append('xInter_' + result2[i])
+            list3.append('xLag_' + result2[i]) 
             continue
     
 print(list3)
