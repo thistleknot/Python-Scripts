@@ -89,14 +89,12 @@ plt.scatter(y_test, model_training.predict(X_test))
 plt.xlabel("True Values")
 plt.ylabel("Predictions")
 
-predicted = np.array(model_training.predict(X_test)).flatten()
-deltas = predicted-yt
+predicted = np.array(model_training.predict(X_test))
+deltas = predicted-y_test.values.flatten()
+#print(predicted)
 
 pd.DataFrame(deltas).hist()
 #pd.DataFrame.from_records(deltas)
-
 rlf = svm.SVR(kernel='linear', C=1).fit(X_train, y_train.values.flatten())
 print(rlf.score(X_test, y_test))
 
-
-#deltas
