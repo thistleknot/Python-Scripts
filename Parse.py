@@ -12,6 +12,8 @@ from scipy.stats import zscore
 from sklearn import svm
 from sklearn import preprocessing
 from sklearn import metrics
+from sklearn.model_selection import ShuffleSplit
+from sklearn.model_selection import cross_val_score
 
 from sklearn.ensemble import RandomForestRegressor
 
@@ -98,3 +100,9 @@ pd.DataFrame(deltas).hist()
 rlf = svm.SVR(kernel='linear', C=1).fit(X_train, y_train.values.flatten())
 print(rlf.score(X_test, y_test))
 
+#scores = cross_val_score(rlf, set1.loc[1:,][:-1], yFutureYield.loc[1:,][:-1].values.flatten(), cv=5, scoring='f1_macro')
+
+#https://xavierbourretsicotte.github.io/subset_selection.html
+n_samples = set1.loc[1:,][:-1].shape[0]
+cv = ShuffleSplit(n_splits=5, test_size=0.3, random_state=0)
+cross_val_score(rlf, set1.loc[1:,][:-1], yFutureYield.loc[1:,][:-1].values.flatten(), cv=cv) 
