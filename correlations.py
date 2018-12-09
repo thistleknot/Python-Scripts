@@ -90,9 +90,19 @@ symbols = [date, x, xYield,y, yYield, yFYield]
 #Set logic on the other axes¶
 
 #https://stackoverflow.com/questions/17477979/dropping-infinite-values-from-dataframes-in-pandas
+xYield.columns = ['xYield_' + str(col) for col in xYield.columns]
+y.columns = ['y_' + str(col) for col in y.columns]
+x.columns = ['x_' + str(col) for col in x.columns]
+yYield.columns = ['yYield_' + str(col) for col in yYield.columns]
+yFYield.columns = ['yFYield_' + str(col) for col in yFYield.columns]
+
+
 result = pd.concat([date, x, xYield, y, yYield, yFYield], axis=1, sort=False)
 #replace inf's with 0
 result.replace(np.inf, 0, inplace=True)
+
+
+
 
 result.to_csv("output.csv", sep=',')
 #plt.matshow(result.corr())
