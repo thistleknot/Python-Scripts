@@ -76,7 +76,6 @@ y = df.loc[0:,['CSUSHPINSA']]
 xLagged = x.shift(+1)
 yLagged = y.shift(+1)
 yFuture = y.shift(-1)
-#dateYield = date/dateLagged
 xYield = (x/xLagged)
 yYield = (y/yLagged)
 yFYield = (yFuture/y)
@@ -85,17 +84,27 @@ xInteraction = (xLagged*x)
 yInteraction = (yLagged*y)
 yFInteraction = (yFuture*y)
 
-symbols = [date, x, xYield, yYield, yFYield]
+symbols = [date, x, xYield,y, yYield, yFYield]
 
 #https://pandas.pydata.org/pandas-docs/stable/merging.html
 #Set logic on the other axes¶
 
 #https://stackoverflow.com/questions/17477979/dropping-infinite-values-from-dataframes-in-pandas
-result = pd.concat(symbols, axis=1, sort=False)
+result = pd.concat([date, x, xYield, y, yYield, yFYield], axis=1, sort=False)
 #replace inf's with 0
 result.replace(np.inf, 0, inplace=True)
 
 result.to_csv("output.csv", sep=',')
-plt.matshow(result.corr())
+#plt.matshow(result.corr())
+#https://stackoverflow.com/questions/29432629/correlation-matrix-using-pandas
 
+corr = result.corr()
+#matches corr formula in excel
+#matches formula here: https://libguides.library.kent.edu/SPSS/PearsonCorr
+corr.to_csv("corr.csv", sep=',')
+
+print(corr)
+#corr.style.background_gradient(highlight_rows, axis = 0)
+#corr.style.apply(highlight_rows, axis = 0)
+#corr.style.background_gradient()
 
