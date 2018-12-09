@@ -5,7 +5,7 @@ import statsmodels.api as sm
 from sklearn import datasets, linear_model, metrics 
 from sklearn.model_selection import train_test_split
 
-input_file = "parsed.csv"
+input_file = "output_test.csv"
 
 #https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
 df = pd.read_csv(input_file, header = 0, index_col=0)
@@ -63,17 +63,31 @@ def stepwise_selection(X, y,
     return included
 
 #x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
-x = df.drop(columns=['date','CSUSHPINSA']).sample(100, axis=1)
+date = df.loc[0:,['test2_z.date']]
+
+#append if desire a sample
+#.sample(50, axis=1)
+x = df.drop(columns=['test2_z.date','CSUSHPINSA','future'])
 y = df.loc[0:,['CSUSHPINSA']]
 
 xLagged = x.shift(+1)
 yLagged = y.shift(+1)
 yFuture = y.shift(-1)
-xYield = (xLagged-x)/xLagged
-yYield = (yLagged-y)/yLagged
-yFutureYield = (yFuture-y)/y
+xYield = (x/xLagged)
+yYield = (y/yLagged)
+yFYield = (yFuture/y)
 
-symbols = ['x', 'lagged', 'interaction', 'y', 'y_yield']
+xInteraction = (xLagged*x)
+yInteraction = (yLagged*y)
+yFInteraction = (yFuture*y)
+
+symbols = [df, xYield, yYield, yFYield]
+
+#https://pandas.pydata.org/pandas-docs/stable/merging.html
+#Set logic on the other axes¶
+result = pd.concat(symbols, axis=1, sort=False)
+
+result.to_csv("output.csv", sep=',')
 
 #without prefix, the next stepwise command gets confused on column names...
 #would be best to only pass x, and then backjoin to these other derived values to do step_wise on
