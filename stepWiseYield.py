@@ -81,7 +81,7 @@ xInteraction = (xLagged*x)
 yInteraction = (yLagged*y)
 yFInteraction = (yFuture*y)
 
-symbols = [df, xYield, yYield, yFYield]
+symbols = [date, x, xYield, yYield, yFYield]
 
 #https://pandas.pydata.org/pandas-docs/stable/merging.html
 #Set logic on the other axes¶
