@@ -46,7 +46,7 @@ yFYield.columns = ['yFYield_' + str(col) for col in yFYield.columns]
 
 #https://chrisalbon.com/python/data_wrangling/pandas_create_column_using_conditional/
 #used for quarters
-df_x = pd.DataFrame(date)
+#df_x = pd.DataFrame(date)
 
 #df_x['Q1'] = np.where(==12, 1, 0)
 
@@ -55,7 +55,7 @@ df_x = pd.DataFrame(date)
 
 #x['Q1'] = np.where(date['date']>=50, 1, 0)
 
-result = pd.concat([date, df_x, xYield, y, yYield, yFYield], axis=1, sort=False)
+result = pd.concat([date, xYield, y, yYield, yFYield], axis=1, sort=False)
 #replace inf's with 0
 result.replace(np.inf, 0, inplace=True)
 
@@ -85,3 +85,4 @@ corr.to_csv("corr.csv", sep=',')
 #pandas.Series.dt.month(date)
 
 
+#result
