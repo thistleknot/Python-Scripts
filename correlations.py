@@ -6,7 +6,7 @@ from sklearn import datasets, linear_model, metrics
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
-input_file = "output.csv"
+input_file = "output_test.csv"
 
 #https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
 df = pd.read_csv(input_file, header = 0, index_col=0)
@@ -18,7 +18,7 @@ date = df.loc[0:,['test2_z.date']]
 #append if desire a sample
 #.sample(50, axis=1)
 #attempts at trying to count 0's and drop columns have failed in R, so I'm hard coding the column drop here
-x = df.drop(columns=['test2_z.date','CSUSHPINSA','FGCCSAQ027S','future'])
+x = df.drop(columns=['test2_z.date','CSUSHPINSA','future'])
 y = df.loc[0:,['CSUSHPINSA']]
 
 xLagged = x.shift(+1)
