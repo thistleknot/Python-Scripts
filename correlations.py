@@ -103,3 +103,14 @@ finResult.loc[4:121].to_csv("prepped.csv", sep=',', index=False)
 corrSet
 finResult
 
+abs(upperSet).median()[abs(upperSet).median() < lowerLimit].axes[0].tolist()
+
+#https://stackoverflow.com/questions/19913659/pandas-conditional-creation-of-a-series-dataframe-column
+#df['color'] = np.where(df['Set']=='Z', 'green', 'red')
+#adds binary logistic categorical variable
+finResult['BL_'+ fieldOfInterest] = np.where(finResult[fieldOfInterest] >1 , 1, 0)
+finResult
+
+finResult.loc[4:121].to_csv("prepped.csv", sep=',', index=False)
+
+
