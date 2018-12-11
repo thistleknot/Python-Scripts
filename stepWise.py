@@ -5,12 +5,10 @@ import statsmodels.api as sm
 from sklearn import datasets, linear_model, metrics 
 from sklearn.model_selection import train_test_split
 
-input_file = "parsed.csv"
+input_file = "prepped.csv"
 
 #https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
 df = pd.read_csv(input_file, header = 0, index_col=0)
-
-#def train_test_split2(X, y)
 
 def stepwise_selection(X, y, 
                        initial_list=[], 
@@ -62,102 +60,39 @@ def stepwise_selection(X, y,
             break
     return included
 
-#x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
-x = df.drop(columns=['date','CSUSHPINSA']).sample(100, axis=1)
-y = df.loc[0:,['CSUSHPINSA']]
+x = df.drop(columns=['test2_z.date','yFYield_CSUSHPINSA'])
+y = df.loc[0:,['yFYield_CSUSHPINSA']]
 
-xLagged = x.shift(+1)
-yLagged = y.shift(+1)
-yFuture = y.shift(-1)
-yYield = (yLagged-y)/yLagged
-yFutureYield = (yFuture-y)/y
-
-symbols = ['x', 'lagged', 'interaction', 'y', 'y_yield']
-
-#without prefix, the next stepwise command gets confused on column names...
-#would be best to only pass x, and then backjoin to these other derived values to do step_wise on
-set1 = pd.concat([x,xLagged.add_prefix('xLag_'),(x*xLagged).add_prefix('xInter_'),y.add_prefix('y_'),yYield.add_prefix('yYield_')], names=['symbols'],axis=1)
-
-X_train, X_test, y_train, y_test = train_test_split(x.loc[2:,][:-1], yFutureYield.loc[2:,][:-1], test_size=0.25)
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.50)
 
 result = stepwise_selection(X_train, y_train)
-
-
 print(result)
-
-#filtered
-my_list = set1[result]
-
-#all columns
-all_list = list(set1)
-
-list2 = result
-for i in range(0, len(list(result))):
-    
-        xInter_ = "xInter_" + result[i]
-        list2.append(xInter_)
-        xLag_ = "xLag_" + result[i]
-        list2.append(xLag_)
-        
-        continue
-
 #get RNG list from X_train output of prior train_test_split
-train_index = X_train.index
-test_index = X_test.index
+#train_index = X_train.index
+#test_index = X_test.index
 
-print(list2)
 #https://stackoverflow.com/questions/19155718/select-pandas-rows-based-on-list-index
-set1[list2].loc[train_index]
+#set randomized
+#set1[list2].loc[train_index]
 
-result2 = stepwise_selection(set1[list2].loc[train_index], y_train)
+result2 = stepwise_selection(X_test, y_test)
 print(result2)
 
-list3 = result2
-for i in range(0, len(list(result2))):
-    
-        temp = result2[i]
-        #tempXLag="xLag_" + result2[i]
-        #tempXInter = "xInter_" + result2[i]
-        
-        #print(result2[i].startswith( 'xInter_' ))        
-        if result2[i].startswith( 'xInter_' ):
-            print(result2[i][7:])
-            list3.append(result2[i][7:])           
-            list3.append('xLag_' + result2[i][7:]) 
-            
-            continue
-        
-            #print(result2[i].startswith( 'xLag_' ))
-        elif result2[i].startswith( 'xLag_' ):
-            print(result2[i][5:])
-            list3.append(result2[i][5:])
-            list3.append('xInter_' + result2[i][5:])
-            continue
-            #continue
-            
-        else:
-            list3.append('xInter_' + result2[i])
-            list3.append('xLag_' + result2[i]) 
-            continue
-    
-print(list3)
-
-#model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
+model_training = sm.OLS(y_train,X_train,missing = 'drop').fit()
 #X_train.filter(items=[result], axis=0)
 
 #x.filter(regex=result)
     
-list(set(list3))
 
-xTrainSubset = set1[list(set(list3))].loc[train_index]
-xTestSubset = set1[list(set(list3))].loc[test_index]
+#xTrainSubset = set1[list(set(list3))].loc[train_index]
+#xTestSubset = set1[list(set(list3))].loc[test_index]
 
 
-model_training = sm.OLS(y_train,xTrainSubset,missing = 'drop').fit()
-print(model_training.summary())
+#model_training = sm.OLS(y_train,xTrainSubset,missing = 'drop').fit()
+#print(model_training.summary())
 
-model_testing = sm.OLS(y_test,xTestSubset,missing = 'drop').fit()
-print(model_testing.summary())
+#model_testing = sm.OLS(y_test,xTestSubset,missing = 'drop').fit()
+#print(model_testing.summary())
 
 #problem is duplicates aren't excluded, trying to use set didn't work
 
