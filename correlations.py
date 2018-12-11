@@ -7,21 +7,20 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import datetime
 
+fieldOfInterest='yFYield_CSUSHPINSA'
+
 input_file = "output_test.csv"
 
 #https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
 df = pd.read_csv(input_file, header = 0, index_col=0)
-
-#x = df.drop(columns=['date','CSUSHPINSA']).sample(20, axis=1)
-#date = df.loc[0:,['test2_z.date']]
-
-#quarters = (date.month-1)//3
 
 #append if desire a sample
 #.sample(50, axis=1)
 #attempts at trying to count 0's and drop columns have failed in R, so I'm hard coding the column drop here
 x = df.drop(columns=['test2_z.date','CSUSHPINSA','future'])
 y = df.loc[0:,['CSUSHPINSA']]
+
+date = df['test2_z.date']
 
 xLagged = x.shift(+1)
 yLagged = y.shift(+1)
@@ -46,14 +45,6 @@ x.columns = ['x_' + str(col) for col in x.columns]
 yYield.columns = ['yYield_' + str(col) for col in yYield.columns]
 yFYield.columns = ['yFYield_' + str(col) for col in yFYield.columns]
 
-#https://chrisalbon.com/python/data_wrangling/pandas_create_column_using_conditional/
-#used for quarters
-#df_x = pd.DataFrame(date)
-
-#df_x['Q1'] = np.where(==12, 1, 0)
-
-#x['Q1'] = np.where(date['date']>=50, 1, 0)
-
 result = pd.concat([date, xYield, y, yYield, yFYield], axis=1, sort=False)
 #replace inf's with 0
 result.replace(np.inf, 0, inplace=True)
@@ -61,8 +52,6 @@ result.replace(np.inf, 0, inplace=True)
 result.to_csv("output.csv", sep=',')
 #plt.matshow(result.corr())
 #https://stackoverflow.com/questions/29432629/correlation-matrix-using-pandas
-
-fieldOfInterest='yFYield_CSUSHPINSA'
 
 corr = result.corr()
 #matches corr formula in excel
@@ -94,15 +83,17 @@ finalSet=set(LowerList1)&set(LowerList2)
 #odd example of how to print by row and column name
 corrSet = corr.loc[finalSet][list(finalSet)]
 
-#date.to_datetime(date.date)
-#pandas.Series.dt.month(date)
-
-#https://stackoverflow.com/questions/26105804/extract-month-from-date-in-python/26105888
-#datetime.datetime.strptime(date, "%Y-%m-%d")
-
-finResult = pd.concat([date, result[list(finalSet)], yFYield], axis=1, sort=False)
-
 #https://stackoverflow.com/questions/30405413/python-pandas-extract-year-from-datetime-dfyear-dfdate-year-is-not
-pDates = pd.to_datetime(date['test2_z.date'])
+pDates = pd.to_datetime(date)
+qDates = pDates.dt.quarter
 
-pDates.dt.quarter
+#result
+finResult = pd.concat([date,result[list(finalSet)], yFYield], axis=1, sort=False)
+
+#https://chrisalbon.com/python/data_wrangling/pandas_create_column_using_conditional/
+finResult['Q1'] = np.where(qDates==1, 1, 0)
+finResult['Q2'] = np.where(qDates==2, 1, 0)
+finResult['Q3'] = np.where(qDates==3, 1, 0)
+finResult['Q4'] = np.where(qDates==4, 1, 0)
+
+finResult
