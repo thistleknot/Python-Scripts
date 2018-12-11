@@ -97,6 +97,9 @@ finResult['Q2'] = np.where(qDates==2, 1, 0)
 finResult['Q3'] = np.where(qDates==3, 1, 0)
 finResult['Q4'] = np.where(qDates==4, 1, 0)
 
-finResult.loc[4:121].to_csv("prepped.csv", sep=',')
+finResult['BL_'+ fieldOfInterest] = np.where(finResult[fieldOfInterest]>0, 1, 0)
+
+finResult.loc[4:121].to_csv("prepped.csv", sep=',', index=False)
 corrSet
+finResult
 
