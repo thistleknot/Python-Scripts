@@ -25,13 +25,13 @@ date = df['test2_z.date']
 xLagged = x.shift(+1)
 yLagged = y.shift(+1)
 yFuture = y.shift(-1)
-xYield = (x/xLagged)
-yYield = (y/yLagged)
-yFYield = (yFuture/y)
+xYield = (x/xLagged)-1
+yYield = (y/yLagged)-1
+yFYield = (yFuture/y)-1
 
-xInteraction = (xLagged*x)
-yInteraction = (yLagged*y)
-yFInteraction = (yFuture*y)
+#xInteraction = (xLagged*x)
+#yInteraction = (yLagged*y)
+#yFInteraction = (yFuture*y)
 
 symbols = [date, x, xYield,y, yYield, yFYield]
 
@@ -97,21 +97,15 @@ finResult['Q2'] = np.where(qDates==2, 1, 0)
 finResult['Q3'] = np.where(qDates==3, 1, 0)
 finResult['Q4'] = np.where(qDates==4, 1, 0)
 
-finResult['BL_'+ fieldOfInterest] = np.where(finResult[fieldOfInterest]>0, 1, 0)
-
-finResult.loc[4:121].to_csv("prepped.csv", sep=',', index=False)
-corrSet
-finResult
-
 abs(upperSet).median()[abs(upperSet).median() < lowerLimit].axes[0].tolist()
 
 #https://stackoverflow.com/questions/19913659/pandas-conditional-creation-of-a-series-dataframe-column
 #df['color'] = np.where(df['Set']=='Z', 'green', 'red')
 #adds binary logistic categorical variable
-finResult['BL_'+ fieldOfInterest] = np.where(finResult[fieldOfInterest] > 1 , 1, 0)
-finResult
+finResult['BL_'+ fieldOfInterest] = np.where(finResult[fieldOfInterest] > 0 , 1, 0)
 
 finResult.loc[4:121].to_csv("prepped.csv", sep=',', index=False)
+corrSet
 finResult
-
+#yFYield
 
