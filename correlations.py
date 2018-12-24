@@ -7,9 +7,13 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import datetime
 
+
+def read_yields(file):
+  input_file = "output_test.csv"
+
 fieldOfInterest='yFYield_CSUSHPINSA'
 
-input_file = "output_test.csv"
+
 
 #https://stackoverflow.com/questions/36519086/pandas-how-to-get-rid-of-unnamed-column-in-a-dataframe/36519122
 df = pd.read_csv(input_file, header = 0, index_col=0)
@@ -104,8 +108,9 @@ abs(upperSet).median()[abs(upperSet).median() < lowerLimit].axes[0].tolist()
 #adds binary logistic categorical variable
 finResult['BL_'+ fieldOfInterest] = np.where(finResult[fieldOfInterest] > 0 , 1, 0)
 
-finResult.loc[4:121].to_csv("prepped.csv", sep=',', index=False)
+finResult.dropna().to_csv("prepped.csv", sep=',', index=False)
 corrSet
-finResult
+#finResult.dropna()
 #yFYield
+
 
