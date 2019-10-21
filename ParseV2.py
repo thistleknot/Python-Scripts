@@ -31,7 +31,7 @@ x = df.loc[0:,[
 'CUUR0000SETA01',
 'CPILFESL',
 'CPILFENS',
-'PCECTPICTM'
+#'PCECTPICTM'
 ]]
 xLagged = x.shift(+1)
 
